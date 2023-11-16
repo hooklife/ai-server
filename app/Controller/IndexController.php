@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Model\User;
+use App\Services\OTSService;
 use App\Services\WechatService;
 use Carbon\Carbon;
 use Hyperf\Di\Annotation\Inject;
@@ -22,6 +23,8 @@ class IndexController extends AbstractController
 {
     #[Inject]
     protected WechatService $wechatService;
+    #[Inject]
+    protected OTSService $otsService;
 
     #[Inject]
     protected Redis $redis;
@@ -32,9 +35,12 @@ class IndexController extends AbstractController
         $code = $this->request->input('code', '1');
         $loginResult = $this->wechatService->login($code);
 
-        $user = User::firstOrCreate(['openid' => $loginResult['openid']]);
-        $accessToken = password_hash((string)$user->id, PASSWORD_BCRYPT);
-        $this->redis->setex("token:" . $accessToken, 3600 * 2, $user->toArray());
+        $user = $this->otsService->getUser($loginResult['openid']);
+        if(!$user['primary_key']){
+            $this->otsService->createUser($loginResult['openid']);
+        }
+        $accessToken = password_hash($loginResult['openid'], PASSWORD_BCRYPT);
+        $this->otsService->setToken($accessToken,$loginResult['openid']);
 
         return $this->response->json(['access_token' => $accessToken, 'expire' => 3600 * 2]);
     }

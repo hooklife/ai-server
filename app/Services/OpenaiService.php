@@ -4,6 +4,8 @@ namespace App\Services;
 
 use HaoZiTeam\ChatGPT\V2 as ChatGPTV2;
 
+use function Hyperf\Config\config;
+
 class OpenaiService
 {
     protected ChatGPTV2 $chatGPT;

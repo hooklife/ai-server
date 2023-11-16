@@ -4,8 +4,74 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9b8ad23d29f1b5d2035051a72244aef5",
+    "content-hash": "e67eb80b3a42877454050c0bc9fb0be9",
     "packages": [
+        {
+            "name": "aliyun/aliyun-tablestore-sdk-php",
+            "version": "v5.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aliyun/aliyun-tablestore-php-sdk.git",
+                "reference": "42b47f6c0837ab7db02c48e94808b1b732f5a04b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aliyun/aliyun-tablestore-php-sdk/zipball/42b47f6c0837ab7db02c48e94808b1b732f5a04b",
+                "reference": "42b47f6c0837ab7db02c48e94808b1b732f5a04b",
+                "shasum": ""
+            },
+            "require": {
+                "google/flatbuffers": "22.9.29",
+                "google/protobuf": "^3.5",
+                "guzzlehttp/guzzle": "^5.3.1|^6.2.1|^7.2.0",
+                "guzzlehttp/promises": "~1.0",
+                "guzzlehttp/psr7": "^1.4.1",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.35|^5.4.3|8.5.30",
+                "satooshi/php-coveralls": "~1.0"
+            },
+            "suggest": {
+                "ext-curl": "To send requests using cURL",
+                "ext-openssl": "Allows working with HTTPS"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/functions.php",
+                    "src/OTS/ProtoBuffer/GPBMetadata/TableStore.php",
+                    "src/OTS/ProtoBuffer/GPBMetadata/TableStoreFilter.php",
+                    "src/OTS/ProtoBuffer/GPBMetadata/TableStoreSearch.php"
+                ],
+                "psr-4": {
+                    "Aliyun\\OTS\\": "src/OTS",
+                    "Aliyun\\OTS\\Retry\\": "src/OTS/Retry",
+                    "Aliyun\\OTS\\Consts\\": "src/OTS/Consts",
+                    "Aliyun\\OTS\\Handlers\\": "src/OTS/Handlers",
+                    "Aliyun\\OTS\\FlatBuffer\\Protocol\\": "src/OTS/FlatBuffer/Protocol",
+                    "Aliyun\\OTS\\ProtoBuffer\\Protocol\\": "src/OTS/ProtoBuffer/Protocol"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Aliyun Tablestore Team",
+                    "homepage": "http://www.aliyun.com/product/ots"
+                }
+            ],
+            "description": "Aliyun Tablestore SDK for PHP",
+            "homepage": "http://www.aliyun.com/product/ots",
+            "support": {
+                "forum": "http://bbs.aliyun.com/thread/226.html",
+                "issues": "https://github.com/aliyun/aliyun-tablestore-php-sdk/issues",
+                "source": "https://github.com/aliyun/aliyun-tablestore-php-sdk/tree/v5.1.3"
+            },
+            "time": "2023-08-08T02:49:47+00:00"
+        },
         {
             "name": "brick/math",
             "version": "0.11.0",
@@ -504,6 +570,90 @@
                 "source": "https://github.com/frengky/php-wkhtmltox/tree/v1.0.0"
             },
             "time": "2020-04-26T03:54:50+00:00"
+        },
+        {
+            "name": "google/flatbuffers",
+            "version": "v22.9.29",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/google/flatbuffers.git",
+                "reference": "c92e78a9f841a6110ec27180d68d1f7f2afda21d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/google/flatbuffers/zipball/c92e78a9f841a6110ec27180d68d1f7f2afda21d",
+                "reference": "c92e78a9f841a6110ec27180d68d1f7f2afda21d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Google\\FlatBuffers\\": "php"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "FlatBuffers for PHP",
+            "homepage": "https://github.com/google/flatbuffers",
+            "keywords": [
+                "flatbuffers",
+                "google",
+                "serialization"
+            ],
+            "support": {
+                "issues": "https://github.com/google/flatbuffers/issues",
+                "source": "https://github.com/google/flatbuffers/tree/v22.9.29"
+            },
+            "time": "2022-09-30T05:12:07+00:00"
+        },
+        {
+            "name": "google/protobuf",
+            "version": "v3.25.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/protocolbuffers/protobuf-php.git",
+                "reference": "1fb247e72df401c863ed239c1660f981644af5db"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/1fb247e72df401c863ed239c1660f981644af5db",
+                "reference": "1fb247e72df401c863ed239c1660f981644af5db",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=5.0.0"
+            },
+            "suggest": {
+                "ext-bcmath": "Need to support JSON deserialization"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Google\\Protobuf\\": "src/Google/Protobuf",
+                    "GPBMetadata\\Google\\Protobuf\\": "src/GPBMetadata/Google/Protobuf"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "proto library for PHP",
+            "homepage": "https://developers.google.com/protocol-buffers/",
+            "keywords": [
+                "proto"
+            ],
+            "support": {
+                "source": "https://github.com/protocolbuffers/protobuf-php/tree/v3.25.1"
+            },
+            "time": "2023-11-15T21:36:03+00:00"
         },
         {
             "name": "graham-campbell/result-type",
@@ -10399,8 +10549,9 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.0"
+        "php": ">=8.0",
+        "ext-imagick": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

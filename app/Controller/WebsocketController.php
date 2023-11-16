@@ -5,23 +5,27 @@ namespace App\Controller;
 
 use App\Model\AiServiceRecord;
 use App\Services\OpenaiService;
+use App\Services\OTSService;
 use Hyperf\Context\ApplicationContext;
 use Hyperf\Contract\OnCloseInterface;
 use Hyperf\Contract\OnMessageInterface;
 use Hyperf\Contract\OnOpenInterface;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\Redis\Redis;
 use Hyperf\WebSocketServer\Context;
 use Swoole\Http\Request;
 
 class WebsocketController implements OnMessageInterface, OnOpenInterface, OnCloseInterface
 {
+    #[Inject]
+    protected OTSService $otsService;
+
     public function onMessage($server, $frame): void
     {
         ['msg' => $message, 'act' => $action] = json_decode($frame->data, true);
 
         $token = Context::get('token');
-        $redis = ApplicationContext::getContainer()->get(Redis::class);
-        if (!$user = $redis->get("token:" . $token)) {
+        if (!$token || !$userOpenid = $this->otsService->getToken($token)) {
             $server->push($frame->fd, json_encode([
                 'action'  => 'no_auth',
                 'message' => '权限认证失败,请重试'
@@ -38,10 +42,7 @@ class WebsocketController implements OnMessageInterface, OnOpenInterface, OnClos
                 return;
             }
             Context::set('action', 'jiemeng');
-            $aiServiceRecord = AiServiceRecord::create([
-                'question'    => $message,
-                'template_id' => 1,
-            ]);
+            $recordId = $this->otsService->createRecord($message,$userOpenid);
 
             $openai = new OpenaiService();
             $answers = $openai->ask($message);
@@ -53,7 +54,7 @@ class WebsocketController implements OnMessageInterface, OnOpenInterface, OnClos
                     'message' => $answer['answer']
                 ]));
             }
-            $aiServiceRecord->update(['user_id' => $user['id'], 'content' => $answerText]);
+            $this->otsService->updateRecord($recordId,$answerText);
             $server->push($frame->fd, json_encode([
                 'act'     => 'answer_finish',
                 'message' => '回答结束'
@@ -73,12 +74,14 @@ class WebsocketController implements OnMessageInterface, OnOpenInterface, OnClos
 
     public function onOpen($server, $request): void
     {
-        $redis = ApplicationContext::getContainer()->get(Redis::class);
         $accessToken = $request->header['authorization'] ?? null;
-        if (!$accessToken || !$redis->get("token:" . $accessToken)) {
+        if (!$accessToken || !$this->otsService->getToken($accessToken)) {
+            
+        var_dump(1111);
             $server->close($request->fd);
             return;
         }
+        
         Context::set('token', $accessToken);
     }
 }

@@ -6,6 +6,8 @@ use EasyWeChat\MiniApp\Application;
 use Hyperf\Context\ApplicationContext;
 use Psr\SimpleCache\CacheInterface;
 
+use function Hyperf\Config\config;
+
 class WechatService
 {
     protected Application $app;
