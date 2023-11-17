@@ -22,7 +22,7 @@ class WebsocketController implements OnMessageInterface, OnOpenInterface, OnClos
 
     public function onMessage($server, $frame): void
     {
-        ['msg' => $message, 'act' => $action] = json_decode($frame->data, true);
+        ['msg' => $message, 'act' => $action ,'payload'=> $payload] = json_decode($frame->data, true);
 
         $token = Context::get('token');
         if (!$token || !$userOpenid = $this->otsService->getToken($token)) {
@@ -32,8 +32,7 @@ class WebsocketController implements OnMessageInterface, OnOpenInterface, OnClos
             ]));
             return;
         }
-
-        if ($action == 'jiemeng') {
+        if ($action == 'start_generate') {
             if (Context::get('action') == 'jiemeng') {
                 $server->push($frame->fd, json_encode([
                     'action'  => 'one',
@@ -42,10 +41,11 @@ class WebsocketController implements OnMessageInterface, OnOpenInterface, OnClos
                 return;
             }
             Context::set('action', 'jiemeng');
-            $recordId = $this->otsService->createRecord($message,$userOpenid);
 
+            $template = $this->otsService->getTempalteByName($payload['template_name']);
+            $recordId = $this->otsService->createRecord($message,$userOpenid ??1);
             $openai = new OpenaiService();
-            $answers = $openai->ask($message);
+            $answers = $openai->ask($template,$message);
             $answerText = '';
             foreach ($answers as $answer) {
                 $answerText .= $answer['answer'];
@@ -59,6 +59,10 @@ class WebsocketController implements OnMessageInterface, OnOpenInterface, OnClos
                 'act'     => 'answer_finish',
                 'message' => '回答结束'
             ]));
+
+
+
+
             Context::destroy('action');
             return;
         }
@@ -76,8 +80,6 @@ class WebsocketController implements OnMessageInterface, OnOpenInterface, OnClos
     {
         $accessToken = $request->header['authorization'] ?? null;
         if (!$accessToken || !$this->otsService->getToken($accessToken)) {
-            
-        var_dump(1111);
             $server->close($request->fd);
             return;
         }

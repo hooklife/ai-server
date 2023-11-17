@@ -220,4 +220,21 @@ class OTSService
             ]
         ]);       
     }
+    
+    public function getTempalteByName($name)
+    {
+        $request = [
+            'table_name' => 'template',
+            'primary_key' => [ //设置主键。
+                ['name', $name],
+            ],
+            'max_versions' => 1,
+            'columns_to_get' => ['prompts','template']
+        ];
+        $response = $this->client->getRow($request);           
+        return [
+            'prompts'=> $response['attribute_columns'][0][1],
+            'template'=> $response['attribute_columns'][1][1]
+        ];
+    }
 }

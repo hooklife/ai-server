@@ -17,10 +17,10 @@ class OpenaiService
         $this->chatGPT = new ChatGPTV2($config['secret_key'], $config['endpoint']);
     }
 
-    public function ask($message = '')
+    public function ask($template,$message)
     {
-        $template = '我请求你担任中国传统的周公解梦师的角色。我将会给你我的梦境，请你解释我的梦境，并为其提供相应的指导和建议。';
-        $this->chatGPT->addMessage($template, 'system');
+        $this->chatGPT->addMessage($template['prompts'],'system');
+        $message = str_replace($template['template'],"#content#",$message);
         return $this->chatGPT->ask($message, stream: true);
     }
 
