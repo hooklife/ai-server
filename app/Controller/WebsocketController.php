@@ -22,7 +22,7 @@ class WebsocketController implements OnMessageInterface, OnOpenInterface, OnClos
 
     public function onMessage($server, $frame): void
     {
-        ['msg' => $message, 'act' => $action ,'payload'=> $payload] = json_decode($frame->data, true);
+        [ 'act' => $action ,'payload'=> $payload] = json_decode($frame->data, true);
 
         $token = Context::get('token');
         if (!$token || !$userOpenid = $this->otsService->getToken($token)) {
@@ -43,9 +43,9 @@ class WebsocketController implements OnMessageInterface, OnOpenInterface, OnClos
             Context::set('action', 'jiemeng');
 
             $template = $this->otsService->getTempalteByName($payload['template_name']);
-            $recordId = $this->otsService->createRecord($message,$userOpenid ??1);
+            $recordId = $this->otsService->createRecord($payload['message'],$userOpenid ??1);
             $openai = new OpenaiService();
-            $answers = $openai->ask($template,$message);
+            $answers = $openai->ask($template,$payload['message']);
             $answerText = '';
             foreach ($answers as $answer) {
                 $answerText .= $answer['answer'];
@@ -59,8 +59,6 @@ class WebsocketController implements OnMessageInterface, OnOpenInterface, OnClos
                 'act'     => 'answer_finish',
                 'message' => '回答结束'
             ]));
-
-
 
 
             Context::destroy('action');

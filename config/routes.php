@@ -20,5 +20,6 @@ use Hyperf\HttpServer\Router\Router;
 
 Router::get('/login', [IndexController::class, 'login']);
 Router::get('/chat', WebsocketController::class);
-Router::get('/generate-post', [GeneratePostController::class, 'index2']);
+
+Router::get('/generate-post', [GeneratePostController::class, 'index']);
 

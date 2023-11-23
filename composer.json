@@ -15,6 +15,7 @@
         "php": ">=8.0",
         "ext-imagick": "*",
         "aliyun/aliyun-tablestore-sdk-php": "^5.1",
+        "aliyuncs/oss-sdk-php": "^2.6",
         "frengky/php-wkhtmltox": "^1.0",
         "haozi-team/chatgpt-php": "^2.0",
         "hyperf/amqp": "~3.0.0",
@@ -36,6 +37,7 @@
         "hyperf/redis": "~3.0.0",
         "hyperf/websocket-server": "^3.0",
         "intervention/image": "^2.7",
+        "mikehaertl/phpwkhtmltopdf": "^2.5",
         "w7corp/easywechat": "^6.7"
     },
     "require-dev": {

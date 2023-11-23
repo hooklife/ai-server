@@ -237,4 +237,21 @@ class OTSService
             'template'=> $response['attribute_columns'][1][1]
         ];
     }
+
+    public function getRecordById($id)
+    {
+        $request = [
+            'table_name' => 'record',
+            'primary_key' => [ //设置主键。
+                ['id', $id],
+            ],
+            'max_versions' => 1,
+            'columns_to_get' => ['content','question']
+        ];
+        $response = $this->client->getRow($request);           
+        return [
+            'content'=> $response['attribute_columns'][0][1],
+            'question'=> $response['attribute_columns'][1][1]
+        ]; 
+    }
 }
