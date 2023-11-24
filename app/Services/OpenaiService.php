@@ -8,20 +8,21 @@ use function Hyperf\Config\config;
 
 class OpenaiService
 {
-    protected ChatGPTV2 $chatGPT;
+    
+    protected array $config;
 
     public function __construct()
     {
         $servers = config('openai.servers');
         $config = $servers[config('openai.default')];
-        $this->chatGPT = new ChatGPTV2($config['secret_key'], $config['endpoint']);
     }
 
     public function ask($template,$message)
     {
-        $this->chatGPT->addMessage($template['prompts'],'system');
+        $chatGPT  = new ChatGPTV2($this->config['secret_key'], $this->config['endpoint'],timeout:15);
+        $chatGPT->addMessage($template['prompts'],'system');
         $message = str_replace($template['template'],"#content#",$message);
-        return $this->chatGPT->ask($message, stream: true);
+        return $chatGPT->ask($message, stream: true);
     }
 
 
