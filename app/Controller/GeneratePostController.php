@@ -23,7 +23,7 @@ class GeneratePostController extends AbstractController
         $record =  $this->otsService->getRecordById($recordId);
 
         $template = file_get_contents("/home/hooklife/Codes/ai-server/node/index.html");
-        $page = str_replace(['[question]','[answer]'],[$record['question'],$record['content']],$template);
+        $page = str_replace(['[question]','[content]'],[$record['question'],$record['content']],$template);
         $image = new Image([
             'width'=>'505',
             'quality'=> 70
@@ -31,11 +31,9 @@ class GeneratePostController extends AbstractController
         $image->setPage($page);
         $image->setOptions([
             'enable-local-file-access',
-            
         ]);
 
-        $this->ossService->client->putObject('ai-server-static',"{$recordId}.jpg" , $image->toString());
-        var_dump($image->getError());
+        $this->ossService->client->putObject('ai-server-static',"poster/{$recordId}.jpg" , $image->toString());
         return $this->response->json(['msg'=>'success']);
     }
 
