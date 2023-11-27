@@ -14,7 +14,7 @@ class OpenaiService
     public function __construct()
     {
         $servers = config('openai.servers');
-        $config = $servers[config('openai.default')];
+        $this->config = $servers[config('openai.default')];
     }
 
     public function ask($template,$message)
