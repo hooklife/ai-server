@@ -63,7 +63,6 @@ class WebsocketController implements OnMessageInterface, OnOpenInterface, OnClos
                 ]
             ]));
 
-
             Context::destroy('action');
             return;
         }
@@ -81,6 +80,10 @@ class WebsocketController implements OnMessageInterface, OnOpenInterface, OnClos
     {
         $accessToken = $request->header['authorization'] ?? null;
         if (!$accessToken || !$this->otsService->getToken($accessToken)) {
+            $server->push($request->fd, json_encode([
+                'act'     => 'close',
+                'message' =>  'token错误'
+            ]));
             $server->close($request->fd);
             return;
         }
