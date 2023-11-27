@@ -79,15 +79,11 @@ class WebsocketController implements OnMessageInterface, OnOpenInterface, OnClos
     public function onOpen($server, $request): void
     {
         $accessToken = $request->header['authorization'] ?? null;
-        if (!$accessToken || !$this->otsService->getToken($accessToken)) {
-            $server->push($request->fd, json_encode([
-                'act'     => 'close',
-                'message' =>  'token错误'
-            ]));
+        if (!$accessToken) {
             $server->close($request->fd);
             return;
         }
-        
         Context::set('token', $accessToken);
+        
     }
 }
