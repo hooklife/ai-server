@@ -57,7 +57,10 @@ class WebsocketController implements OnMessageInterface, OnOpenInterface, OnClos
             $this->otsService->updateRecord($recordId,$answerText);
             $server->push($frame->fd, json_encode([
                 'act'     => 'answer_finish',
-                'message' => '回答结束'
+                'message' => '回答结束',
+                'payload' => [
+                    'record_id'=> $recordId
+                ]
             ]));
 
 

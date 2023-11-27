@@ -9,6 +9,8 @@ use App\Services\OTSService;
 use mikehaertl\wkhtmlto\Image;
 use Hyperf\Di\Annotation\Inject;
 
+use function Hyperf\Support\env;
+
 class GeneratePostController extends AbstractController
 {
     #[Inject]
@@ -22,7 +24,7 @@ class GeneratePostController extends AbstractController
         $recordId = $this->request->input('record_id');
         $record =  $this->otsService->getRecordById($recordId);
 
-        $template = file_get_contents("/home/hooklife/Codes/ai-server/node/index.html");
+        $template = file_get_contents('storage/templates/jiemeng/index.html');
         $page = str_replace(['[question]','[content]'],[$record['question'],$record['content']],$template);
         $image = new Image([
             'width'=>'505',
@@ -34,7 +36,9 @@ class GeneratePostController extends AbstractController
         ]);
 
         $this->ossService->client->putObject('ai-server-static',"poster/{$recordId}.jpg" , $image->toString());
-        return $this->response->json(['msg'=>'success']);
+        return $this->response->json([
+            'img'=>env('OSS_DOMAIN')."/poster/{$recordId}.jpg"
+        ]);
     }
 
 }
