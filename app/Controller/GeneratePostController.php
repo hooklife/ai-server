@@ -35,10 +35,11 @@ class GeneratePostController extends AbstractController
             'enable-local-file-access',
         ]);
 
-        $this->ossService->client->putObject('ai-server-static',"poster/{$recordId}.jpg" , $image->toString());
-        return $this->response->json([
-            'img'=>env('OSS_DOMAIN')."/poster/{$recordId}.jpg"
-        ]);
+        // $this->ossService->client->putObject('ai-server-static',"poster/{$recordId}.jpg" , $image->toString());
+        // return $this->response->json([
+        //     'img'=>env('OSS_DOMAIN')."/poster/{$recordId}.jpg"
+        // ]);
+        return $this->response->raw($image->toString())->withHeader('Content-Type','image/jpeg');
     }
 
 }

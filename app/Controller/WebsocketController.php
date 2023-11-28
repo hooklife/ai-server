@@ -41,7 +41,6 @@ class WebsocketController implements OnMessageInterface, OnOpenInterface, OnClos
                 return;
             }
             Context::set('action', 'jiemeng');
-
             $template = $this->otsService->getTempalteByName($payload['template_name']);
             $recordId = $this->otsService->createRecord($payload['message'],$userOpenid ??1);
             $openai = new OpenaiService();
