@@ -65,7 +65,7 @@ class OTSService
 
     public function createRecord($question,$userId)
     {
-        $id = $this->generateUuid4();
+        $id = time().'-'.mt_rand(). '-'.mt_rand();
         $request = [
             'table_name' => 'record',
             'condition' => RowExistenceExpectationConst::CONST_IGNORE, //设置期望原行不存在时，写入数据。
