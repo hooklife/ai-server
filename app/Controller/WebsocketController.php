@@ -46,12 +46,19 @@ class WebsocketController implements OnMessageInterface, OnOpenInterface, OnClos
             $openai = new OpenaiService();
             $answers = $openai->ask($template,$payload['message']);
             $answerText = '';
+            
+            $buffer = 0;
             foreach ($answers as $answer) {
                 $answerText .= $answer['answer'];
                 $server->push($frame->fd, json_encode([
                     'act'     => 'answer',
                     'message' => $answer['answer']
                 ]));
+                $buffer += mb_strlen($answer['answer']);
+                if($buffer>10){
+                    $this->otsService->updateRecord($recordId,$answerText);
+                    $buffer = 0;
+                }
             }
             $this->otsService->updateRecord($recordId,$answerText);
             $server->push($frame->fd, json_encode([
