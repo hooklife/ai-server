@@ -10,19 +10,25 @@ use function Hyperf\Config\config;
 
 class WechatService
 {
-    protected Application $app;
+    protected $apps = [];
 
     public function __construct()
     {
         $cache = ApplicationContext::getContainer()->get(CacheInterface::class);
-        $app = new Application(config('easywechat'));
-        $app->setCache($cache);
-        $this->app = $app;
+        $easywechat = config('easywechat');
+        foreach($easywechat['apps'] as $appName => $app){
+            $this->apps[$appName] = new Application(array_merge(
+                $easywechat['base'],
+                $app
+            ));
+            $this->apps[$appName]->setCache($cache);
+        }
+        
     }
 
-    public function login(string $code): array
+    public function login(string $code,$appName = 'jiemeng'): array
     {
-        return $this->app->getUtils()->codeToSession($code);
+        return $this->apps[$appName]->getUtils()->codeToSession($code);
     }
 
 

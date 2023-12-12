@@ -33,7 +33,8 @@ class IndexController extends AbstractController
     public function login()
     {
         $code = $this->request->input('code', '1');
-        $loginResult = $this->wechatService->login($code);
+        $app = $this->request->input('app','jiemeng');
+        $loginResult = $this->wechatService->login($code,$app);
 
         $user = $this->otsService->getUser($loginResult['openid']);
         if(!$user['primary_key']){
