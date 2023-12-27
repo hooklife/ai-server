@@ -8,6 +8,10 @@ return [
         'xiaohongshu_wenan'=>[
             'app_id'    =>'wx74111e6ccde16c5c',
             'secret'    =>'b86a1d7f646d3af48366cb641c16f54f'
+        ],
+        'chongwu_jiedu'=> [
+            'app_id' => 'wx7c22e8e3ca591a17',
+            'secret' => '47474dab0903f6c08811fde448f2d65d'
         ]
     ],
     'base'=> [
