@@ -6,12 +6,12 @@ namespace App\Controller;
 use App\Model\AiServiceRecord;
 use App\Services\OpenaiService;
 use App\Services\OTSService;
+use App\Services\WechatService;
 use Hyperf\Context\ApplicationContext;
 use Hyperf\Contract\OnCloseInterface;
 use Hyperf\Contract\OnMessageInterface;
 use Hyperf\Contract\OnOpenInterface;
 use Hyperf\Di\Annotation\Inject;
-use Hyperf\Redis\Redis;
 use Hyperf\WebSocketServer\Context;
 use Swoole\Http\Request;
 
@@ -19,6 +19,8 @@ class WebsocketController implements OnMessageInterface, OnOpenInterface, OnClos
 {
     #[Inject]
     protected OTSService $otsService;
+    #[Inject]
+    protected WechatService $wechat;
 
     public function onMessage($server, $frame): void
     {
@@ -41,8 +43,19 @@ class WebsocketController implements OnMessageInterface, OnOpenInterface, OnClos
                 return;
             }
             Context::set('action', 'jiemeng');
+
+            $app = Context::get('app');
+            $result  = $this->wechat->secCheck($app,$userOpenid,$payload['message']);
+            if($result['result']['suggest']!='pass'){
+                $server->push($frame->fd, json_encode([
+                    'act'     => 'risky',
+                    'message' => '存在敏感词，请勿提交非法内容'
+                ])); 
+                $this->otsService->createRecord("用户提交非法内容:".$payload['message'],$userOpenid);
+                return ;
+            }
             $template = $this->otsService->getTempalteByName($payload['template_name']);
-            $recordId = $this->otsService->createRecord($payload['message'],$userOpenid ??1);
+            $recordId = $this->otsService->createRecord($payload['message'],$userOpenid);
             $openai = new OpenaiService();
             $answers = $openai->ask($template,$payload['message']);
             $answerText = '';
@@ -85,11 +98,13 @@ class WebsocketController implements OnMessageInterface, OnOpenInterface, OnClos
     public function onOpen($server, $request): void
     {
         $accessToken = $request->header['authorization'] ?? null;
+        $app = $request->header['app'] ?? 'jiemeng';
         if (!$accessToken) {
             $server->close($request->fd);
             return;
         }
         Context::set('token', $accessToken);
+        Context::set('app', $app);
         
     }
 }

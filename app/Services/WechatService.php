@@ -31,6 +31,16 @@ class WechatService
         return $this->apps[$appName]->getUtils()->codeToSession($code);
     }
 
+    public function secCheck(string $appName,string $openid,string $content)
+    {
+        $response = $this->apps[$appName]->getClient()->postJson('/wxa/msg_sec_check', [
+            "openid" => $openid,
+            "scene"=> 2,
+            "version"=> 2,
+            "content"=> $content
+        ]);
+        return json_decode($response->getContent(),true);
+    }
 
 
 }

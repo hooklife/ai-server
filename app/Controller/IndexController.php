@@ -17,7 +17,6 @@ use App\Services\OTSService;
 use App\Services\WechatService;
 use Carbon\Carbon;
 use Hyperf\Di\Annotation\Inject;
-use Hyperf\Redis\Redis;
 
 class IndexController extends AbstractController
 {
@@ -26,8 +25,6 @@ class IndexController extends AbstractController
     #[Inject]
     protected OTSService $otsService;
 
-    #[Inject]
-    protected Redis $redis;
 
 
     public function login()
